@@ -216,10 +216,10 @@ else
     echo " "
     echo "+----------------------------------------------------------------------+"
     echo "| Running CMTK registration"
-    echo "| $CMTK/registration --threads $NSLOTS -i -v --dofs 6 --dofs 9 --accuracy 0.8 -o ${registered_affine_xform} ${ch3_ref_nrrd} ${ch2_ref_nrrd} "
+    echo "| $CMTK/registration --threads $NSLOTS -i -v --dofs 6 --accuracy 0.8 -o ${registered_affine_xform} ${ch3_ref_nrrd} ${ch2_ref_nrrd} "
     echo "+----------------------------------------------------------------------+"
     START=`date '+%F %T'`
-    $CMTK/registration --threads $NSLOTS -i -v --dofs 6 --dofs 9 --accuracy 0.8 -o ${registered_affine_xform} ${ch3_ref_nrrd} ${ch2_ref_nrrd}
+    $CMTK/registration --threads $NSLOTS -i -v --dofs 6 --accuracy 0.8 -o ${registered_affine_xform} ${ch3_ref_nrrd} ${ch2_ref_nrrd}
     STOP=`date '+%F %T'`
     if [[ ! -e $registered_affine_xform ]]; then
         echo -e "Error: CMTK registration failed"
