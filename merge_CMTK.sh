@@ -65,10 +65,10 @@ if [[ $test == 1 ]]; then
 else
 
 # Tools
-    CMTK=/opt/CMTK/bin
-    FIJI=/opt/Fiji/ImageJ-linux64
-    Vaa3D=/opt/Vaa3D/vaa3d
-    MACRO_DIR=/opt/aligner/fiji_macros
+    CMTK=/app/cmtk/bin
+    FIJI=/app/fiji/fiji
+    Vaa3D=/app/vaa3d/vaa3d
+    MACRO_DIR=/app/fiji_macros
 
     OUTPUT=$WORK_DIR"/Output"
     FINALOUTPUT=$WORK_DIR"/FinalOutputs"
