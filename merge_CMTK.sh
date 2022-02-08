@@ -9,38 +9,14 @@ InputFilePath1=$1
 InputFilePath2=$2
 NSLOTS=$3
 OUTPUT=$4
+REFERENCE2CH=$5
+REFERENCE3CH=$6
 
-end=${InputFilePath1##*/}
-num1=$((${#InputFilePath1} - ${#end}))
-
-OUTPUTNAME=${InputFilePath#*/}
-OUTPUTNAME=${OUTPUTNAME#*/}
-OUTPUTNAME=${OUTPUTNAME#*/}
-OUTPUTNAME=${OUTPUTNAME#*/}
-OUTPUTNAME=${OUTPUTNAME#*/}
-OUTPUTNAME=${OUTPUTNAME#*/}
-OUTPUTNAME=${OUTPUTNAME#*/}
-OUTPUTNAME=${OUTPUTNAME#*/}
-OUTPUTNAME=${OUTPUTNAME#*/}
-OUTPUTNAME=${OUTPUTNAME#*/}
-OUTPUTNAME=${OUTPUTNAME#*/}
-OUTPUTNAME=${OUTPUTNAME#*/}
-OUTPUTNAME=${OUTPUTNAME#*/}
-OUTPUTNAME=${OUTPUTNAME#*/}
-
-
-WORK_DIRPRE=${InputFilePath1:0:num1-1}
-WORK_DIR=${WORK_DIRPRE}"/"${OUTPUTNAME%.*}
-
-mkdir ${WORK_DIR}
-FINALOUTPUT=${WORK_DIRPRE}"/"${OUTPUTNAME%.*}
-
-filename=${OUTPUTNAME%.*}
 
 echo "filename; "$filename
 echo "InputFilePath1; "$InputFilePath1
-echo "WORK_DIR; "$WORK_DIR
-echo "OUTPUTNAME; "$OUTPUTNAME
+echo "InputFilePath2; "$InputFilePath2
+echo "OUTPUT; "$OUTPUT
 
 test=0
 
@@ -70,8 +46,8 @@ else
     Vaa3D=/app/vaa3d/vaa3d
     MACRO_DIR=/app/fiji_macros
 
-    OUTPUT=$WORK_DIR"/Output"
-    FINALOUTPUT=$WORK_DIR"/FinalOutputs"
+  #  OUTPUT=$OUTPUTDIR"/Output"
+    FINALOUTPUT=$OUTPUT"/FinalOutputs"
     DEBUG_DIR="${OUTPUT}/debug"
 
     mkdir -p $DEBUG_DIR
@@ -108,17 +84,40 @@ fi
 
 echo "NSLOTS; "$NSLOTS
 echo "OUTPUT; "$OUTPUT
+echo "REFERENCE2CH+1 " $((${REFERENCE2CH}+1))
+
 
 # "-------------------Global aligned files----------------------"
-ch2_ref_nrrd=$OUTPUT"/C1-2ch.nrrd"
-ch3_ref_nrrd=$OUTPUT"/C1-3ch.nrrd"
+ch2_ref_nrrd=$OUTPUT"/C"$((${REFERENCE2CH}+1))"-2ch.nrrd"
+ch3_ref_nrrd=$OUTPUT"/C"$((${REFERENCE3CH}+1))"-3ch.nrrd"
 
-ch2_sig=$OUTPUT"/C2-2ch.nrrd"
-ch2_transformed_sig=$OUTPUT"/C2-2ch_transformed.nrrd"
-ch2_transformed_ref=$OUTPUT"/C1-2ch_transformed.nrrd"
+if [[ ${REFERENCE2CH} == 0 ]]; then
+    ch2_sig_number="2"
+elif [[ ${REFERENCE2CH} == 1 ]]; then
+    ch2_sig_number="1"
+fi
 
-ch3_sig1=$OUTPUT"/C2-3ch.nrrd"
-ch3_sig2=$OUTPUT"/C3-3ch.nrrd"
+ch2_sig=$OUTPUT"/C${ch2_sig_number}-2ch.nrrd"
+ch2_transformed_sig=$OUTPUT"/C${ch2_sig_number}-2ch_transformed.nrrd"
+ch2_transformed_ref=$OUTPUT"/C"$((${REFERENCE2CH}+1))"-2ch_transformed.nrrd"
+
+if [[ ${REFERENCE3CH} == 0 ]]; then
+    ch3_sig1_number="2"
+    ch3_sig2_number="3"
+elif [[ ${REFERENCE3CH} == 1 ]]; then
+    ch3_sig1_number="1"
+    ch3_sig2_number="3"
+elif [[ ${REFERENCE3CH} == 2 ]]; then
+    ch3_sig1_number="1"
+    ch3_sig2_number="2"
+fi
+
+echo "ch2_sig_number "$ch2_sig_number
+echo "ch3_sig1_number; "$ch3_sig1_number
+echo "ch3_sig2_number "$ch3_sig2_number
+
+ch3_sig1=$OUTPUT"/C"${ch3_sig1_number}"-3ch.nrrd"
+ch3_sig2=$OUTPUT"/C"${ch3_sig2_number}"-3ch.nrrd"
 mergedOUTPUT=$OUTPUT"/merged.v3draw"
 
 echo "ch2_ref_nrrd "$ch2_ref_nrrd

@@ -30,7 +30,7 @@ open(dir+"C1-3ch.nrrd");
 numimage=nImages();
 
 if(numimage==4)
-run("Merge Channels...", "c1=C2-2ch_transformed.nrrd c2=C3-3ch.nrrd c3=C2-3ch.nrrd c4=C1-3ch.nrrd create");
+run("Merge Channels...", "c1=C2-3ch.nrrd c2=C3-3ch.nrrd c3=C2-2ch_transformed.nrrd c4=C1-3ch.nrrd create");
 else
 exit("there is no 4ch before merging");
 
