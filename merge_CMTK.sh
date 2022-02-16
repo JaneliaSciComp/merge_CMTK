@@ -12,12 +12,6 @@ OUTPUT=$4
 REFERENCE2CH=$5
 REFERENCE3CH=$6
 
-
-echo "filename; "$filename
-echo "InputFilePath1; "$InputFilePath1
-echo "InputFilePath2; "$InputFilePath2
-echo "OUTPUT; "$OUTPUT
-
 test=0
 
 if [[ $test == 1 ]]; then
@@ -40,16 +34,13 @@ if [[ $test == 1 ]]; then
 
 else
 
-# Tools
+    # Tools
     CMTK=/app/cmtk/bin
     FIJI=/app/fiji/fiji
     Vaa3D=/app/vaa3d/vaa3d
     MACRO_DIR=/app/fiji_macros
-
-  #  OUTPUT=$OUTPUTDIR"/Output"
     FINALOUTPUT=$OUTPUT"/FinalOutputs"
     DEBUG_DIR="${OUTPUT}/debug"
-
     mkdir -p $DEBUG_DIR
 fi
 
@@ -59,13 +50,8 @@ MERGE1=$MACRO_DIR"/merge_split.ijm"
 MERGE2=$MACRO_DIR"/merge_combine.ijm"
 SCOREGENERATION=$MACRO_DIR"/Score_Generator_Cluster.ijm"
 
-if [[ ! -d $OUTPUT ]]; then
-    mkdir $OUTPUT
-fi
-
-if [[ ! -d $FINALOUTPUT ]]; then
-    mkdir $FINALOUTPUT
-fi
+mkdir -p $OUTPUT
+mkdir -p $FINALOUTPUT
 
 if [[ ! -e $MERGE1 ]]; then
     echo "MERGE1 macro could not be found at $MERGE1"
@@ -82,9 +68,12 @@ if [[ ! -e $FIJI ]]; then
     exit 1
 fi
 
+echo "InputFilePath1; "$InputFilePath1
+echo "InputFilePath2; "$InputFilePath2
 echo "NSLOTS; "$NSLOTS
-echo "OUTPUT; "$OUTPUT
+echo "OutputDir; "$OUTPUT
 echo "REFERENCE2CH+1 " $((${REFERENCE2CH}+1))
+echo "REFERENCE3CH+1 " $((${REFERENCE3CH}+1))
 
 
 # "-------------------Global aligned files----------------------"
@@ -175,7 +164,7 @@ if [[ -e ${ch2_ref_nrrd} ]]; then
 else
     echo "+---------------------------------------------------------------------------------------+"
     echo "| Running $MERGE1_1"
-    echo "| $FIJI -macro $MERGE1 \"$InputFilePath1,${OUTPUT}.\""
+    echo "| $FIJI -macro $MERGE1 \"$InputFilePath1,${OUTPUT}\""
     echo "+---------------------------------------------------------------------------------------+"
     START=`date '+%F %T'`
 # Expect to take far less than 1 hour
@@ -193,7 +182,7 @@ else
 
     echo "+---------------------------------------------------------------------------------------+"
     echo "| Running $MERGE1_2"
-    echo "| $FIJI -macro $MERGE1 \"$InputFilePath2,${OUTPUT}.\""
+    echo "| $FIJI -macro $MERGE1 \"$InputFilePath2,${OUTPUT}\""
     echo "+---------------------------------------------------------------------------------------+"
     START=`date '+%F %T'`
 
@@ -251,10 +240,12 @@ $FIJI --headless -macro ${MERGE2} $OUTPUT"/",${mergedOUTPUT}
 #rm $ch2_transformed_sig
 #rm $ch2_transformed_ref
 
-if [[ $test == 0 ]]; then
-cp $OUTPUT/*.{png,jpg,log,txt} $DEBUG_DIR
-cp -R $OUTPUT/*.xform $DEBUG_DIR
+mv ${mergedOUTPUT} $FINALOUTPUT
 
+if [[ $test == 1 ]]; then
+    cp $OUTPUT/*.{png,jpg,log,txt} $DEBUG_DIR
+    cp -R $OUTPUT/*.xform $DEBUG_DIR
 fi
+
 echo "$0 done"
 exit 0
